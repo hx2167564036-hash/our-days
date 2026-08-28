@@ -1,0 +1,18 @@
+[Unit]
+Description=OurDays - couple life recording website
+After=network.target
+
+[Service]
+Type=simple
+# 改成你的实际部署路径和用户名
+WorkingDirectory=/opt/our-days
+ExecStart=/usr/bin/python3 /opt/our-days/server.py
+Restart=always
+RestartSec=3
+# 以低权限用户运行（改成你的用户）
+User=www-data
+Group=www-data
+Environment=PORT=8000
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>OurDays · 二人生活记录</title>
+  <link rel="stylesheet" href="/leaflet/leaflet.css" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💞</text></svg>" />
+</head>
+<body>
+  <div class="app">
+    <!-- 顶部 -->
+    <header class="topbar">
+      <div class="brand">💞 OurDays</div>
+      <div class="topbar-sub" id="topbarSub">—</div>
+    </header>
+
+    <!-- 主内容 -->
+    <main class="content">
+      <!-- 首页 -->
+      <section class="page active" id="page-home">
+        <div class="hero">
+          <div class="hero-label">我们在一起</div>
+          <div class="hero-days" id="togetherDays">—</div>
+          <div class="hero-days-label">天</div>
+          <div class="hero-date" id="togetherSince">设置开始日期后显示</div>
+        </div>
+
+        <div class="section-title">🗓 纪念日</div>
+        <div class="anni-list" id="anniList">
+          <div class="empty">还没有纪念日，去设置里添加吧</div>
+        </div>
+
+        <div class="section-title">📊 我们的记录</div>
+        <div class="stat-grid">
+          <div class="stat-card" data-nav="timeline">
+            <div class="stat-num" id="statMoments">0</div>
+            <div class="stat-label">条生活记录</div>
+          </div>
+          <div class="stat-card" data-nav="wishlist">
+            <div class="stat-num" id="statPlaces">0</div>
+            <div class="stat-label">个想去的地方</div>
+          </div>
+          <div class="stat-card" data-nav="wishlist">
+            <div class="stat-num" id="statDone">0</div>
+            <div class="stat-label">个已去过</div>
+          </div>
+          <div class="stat-card" data-nav="outing">
+            <div class="stat-num" id="statActs">0</div>
+            <div class="stat-label">个活动点子</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 时光 -->
+      <section class="page" id="page-timeline">
+        <div class="composer card">
+          <div class="composer-top">
+            <div class="who-toggle" id="whoToggle">
+              <span class="who-option active" data-who="我">我</span>
+              <span class="who-option" data-who="TA">TA</span>
+            </div>
+            <input type="date" class="input date-input" id="momentDate" />
+          </div>
+          <textarea class="input textarea" id="momentContent" placeholder="记录今天的小美好…（支持文字和照片）" rows="3"></textarea>
+          <div class="mood-row" id="moodRow">
+            <span class="mood-label">心情</span>
+            <button class="mood-btn" data-mood="😊">😊</button>
+            <button class="mood-btn" data-mood="😍">😍</button>
+            <button class="mood-btn" data-mood="🥰">🥰</button>
+            <button class="mood-btn" data-mood="😆">😆</button>
+            <button class="mood-btn" data-mood="😌">😌</button>
+            <button class="mood-btn" data-mood="🥳">🥳</button>
+            <button class="mood-btn" data-mood="😢">😢</button>
+            <button class="mood-btn" data-mood="🤔">🤔</button>
+          </div>
+          <div class="composer-footer">
+            <label class="btn btn-ghost" for="imageInput">📷 加照片</label>
+            <input type="file" id="imageInput" accept="image/*" hidden />
+            <div class="composer-actions">
+              <button class="btn btn-ghost" id="cancelMomentEdit" hidden>取消</button>
+              <button class="btn btn-primary" id="postMoment">发布</button>
+            </div>
+          </div>
+          <div class="image-preview" id="imagePreview" hidden>
+            <img id="previewImg" alt="预览" />
+            <button class="remove-img" id="removePreview">✕</button>
+          </div>
+        </div>
+        <div class="filter-row" id="momentFilter">
+          <button class="chip active" data-f="all">全部</button>
+          <button class="chip" data-f="a">我</button>
+          <button class="chip" data-f="b">TA</button>
+        </div>
+        <div class="timeline" id="timeline">
+          <div class="empty">还没有记录，写下第一条吧</div>
+        </div>
+      </section>
+
+      <!-- 想去 -->
+      <section class="page" id="page-wishlist">
+        <div class="filter-row" id="placeFilter">
+          <button class="chip active" data-filter="all">全部</button>
+          <button class="chip" data-filter="想去">想去</button>
+          <button class="chip" data-filter="已去过">已去过</button>
+        </div>
+        <div class="composer card">
+          <input type="text" class="input" id="placeName" placeholder="地点名称，如：大理、某家火锅店…" />
+          <div class="row">
+            <select class="input" id="placeCategory">
+              <option value="旅行">🌍 旅行</option>
+              <option value="美食">🍜 美食</option>
+              <option value="活动">🎢 活动</option>
+              <option value="打卡">📸 打卡</option>
+              <option value="其他">✨ 其他</option>
+            </select>
+            <div class="wish-level" id="wishLevel">
+              <span class="mood-label">想去程度</span>
+              <button class="star" data-v="1">★</button>
+              <button class="star" data-v="2">★</button>
+              <button class="star active" data-v="3">★</button>
+              <button class="star" data-v="4">★</button>
+              <button class="star" data-v="5">★</button>
+            </div>
+          </div>
+          <input type="text" class="input" id="placeAddress" placeholder="地址（可选）" />
+          <input type="text" class="input" id="placeNote" placeholder="备注，如：想春天去、听说很好吃…" />
+          <button class="btn btn-primary btn-block" id="addPlace">➕ 收藏这个地方</button>
+          <button class="btn btn-ghost btn-block" id="cancelPlaceEdit" hidden>取消编辑</button>
+        </div>
+        <div class="place-list" id="placeList">
+          <div class="empty">还没有收藏的地方</div>
+        </div>
+      </section>
+
+      <!-- 地图 -->
+      <section class="page" id="page-map">
+        <div class="map-legend">
+          <span class="legend-item"><span class="dot visited"></span> 已去过</span>
+          <span class="legend-item"><span class="dot wish"></span> 未探索</span>
+        </div>
+        <div class="map-search">
+          <input type="text" class="input" id="mapSearch" placeholder="搜索地点，添加到地图…" />
+          <button class="btn btn-primary" id="mapSearchBtn">搜索</button>
+        </div>
+        <div class="map-search-results" id="mapSearchResults"></div>
+        <div class="map-container" id="map"></div>
+        <div class="unlocated" id="unlocatedList"></div>
+      </section>
+
+      <!-- 出门 -->
+      <section class="page" id="page-outing">
+        <div class="roulette-wrap">
+          <div class="roulette" id="roulette">
+            <div class="roulette-center">GO</div>
+          </div>
+          <div class="roulette-result" id="rouletteResult">点击转盘，看看今天去哪</div>
+          <button class="btn btn-primary btn-block" id="spinBtn">🎡 转一转</button>
+        </div>
+        <div class="section-title">🎯 抽选范围</div>
+        <div class="roulette-source" id="rouletteSource">
+          <label class="checkbox"><input type="checkbox" id="srcActivities" checked /> 活动点子</label>
+          <label class="checkbox"><input type="checkbox" id="srcPlaces" checked /> 想去的地方（未打卡）</label>
+        </div>
+        <div class="section-title">➕ 添加活动点子</div>
+        <div class="composer card">
+          <input type="text" class="input" id="actName" placeholder="活动名称，如：看电影、爬山、逛美术馆…" />
+          <div class="row">
+            <select class="input" id="actCategory">
+              <option value="美食">🍜 美食</option>
+              <option value="娱乐">🎬 娱乐</option>
+              <option value="户外">🏕 户外</option>
+              <option value="文艺">🎨 文艺</option>
+              <option value="其他">✨ 其他</option>
+            </select>
+            <button class="btn btn-primary" id="addAct">添加</button>
+            <button class="btn btn-ghost" id="cancelActEdit" hidden>取消</button>
+          </div>
+        </div>
+        <div class="place-list" id="actList">
+          <div class="empty">还没有活动点子</div>
+        </div>
+      </section>
+
+      <!-- 设置 -->
+      <section class="page" id="page-settings">
+        <div class="card">
+          <div class="section-title">👩‍❤️‍👨 基本信息</div>
+          <label class="field-label">我的名字</label>
+          <input type="text" class="input" id="setNameA" />
+          <label class="field-label">TA 的名字</label>
+          <input type="text" class="input" id="setNameB" />
+          <label class="field-label">在一起的日子</label>
+          <input type="date" class="input" id="setTogether" />
+          <button class="btn btn-primary btn-block" id="saveBasic">保存</button>
+        </div>
+
+        <div class="card">
+          <div class="section-title">🗓 添加纪念日</div>
+          <input type="text" class="input" id="anniName" placeholder="纪念日名称，如：第一次约会" />
+          <input type="date" class="input" id="anniDate" />
+          <label class="checkbox"><input type="checkbox" id="anniYearly" checked /> 每年重复</label>
+          <button class="btn btn-primary btn-block" id="addAnni">添加纪念日</button>
+          <button class="btn btn-ghost btn-block" id="cancelAnniEdit" hidden>取消编辑</button>
+          <div class="anni-list" id="anniManageList"></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">🔒 访问口令</div>
+          <div class="field-label">设置口令后，打开网站需输入（留空则关闭保护）</div>
+          <input type="password" class="input" id="setPasscode" placeholder="设置访问口令" />
+          <button class="btn btn-primary btn-block" id="savePasscode">保存口令</button>
+          <button class="btn btn-ghost btn-block" id="logoutBtn">退出登录</button>
+        </div>
+
+        <div class="card">
+          <div class="section-title">💾 数据备份</div>
+          <button class="btn btn-primary btn-block" id="exportBtn">导出全部数据（JSON）</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- 底部导航 -->
+    <nav class="tabbar">
+      <button class="tab active" data-page="home">🏠<span>首页</span></button>
+      <button class="tab" data-page="timeline">📖<span>时光</span></button>
+      <button class="tab" data-page="wishlist">📍<span>想去</span></button>
+      <button class="tab" data-page="map">🗺️<span>地图</span></button>
+      <button class="tab" data-page="outing">🎡<span>出门</span></button>
+      <button class="tab" data-page="settings">⚙️<span>设置</span></button>
+    </nav>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- 登录浮层 -->
+  <div class="login-overlay" id="loginOverlay" hidden>
+    <div class="login-box">
+      <div class="login-title">💞 OurDays</div>
+      <div class="login-sub">输入口令进入</div>
+      <input type="password" class="input" id="loginPasscode" placeholder="访问口令" />
+      <button class="btn btn-primary btn-block" id="loginBtn">进入</button>
+      <div class="login-err" id="loginErr"></div>
+    </div>
+  </div>
+
+  <script src="/leaflet/leaflet.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+data.db
+data.db-wal
+data.db-shm
+static/uploads/*
+!static/uploads/.gitkeep
+
+# 生成物/临时文件
+screenshots/
+*.tar.gz
+*.zip
+*.b64
+deploy.sh
